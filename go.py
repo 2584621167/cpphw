@@ -7,8 +7,8 @@ class Go(Game):
         self.captured_stones = {'Black': 0, 'White': 0}
 
     def start_game(self):
-        self.display_board()
         while True:
+            self.display_board()  # 显示棋盘
             self.display_prompt()  # 显示提示信息
             move = input(f"{self.current_player}的回合，请输入指令或坐标 (行 列): ").strip().lower()
 
