@@ -8,10 +8,13 @@ class Gomoku(Game):
     def start_game(self):
         self.display_board()
         while True:
-            move = input(
-                f"{self.current_player}的回合，请输入坐标 (行 列)，'undo' 悔棋，'resign' 认输，'restart' 重新开始，'save' 保存: ").strip().lower()
+            self.display_prompt()  # 显示提示信息
+            move = input(f"{self.current_player}的回合，请输入指令或坐标 (行 列): ").strip().lower()
 
-            if move == 'resign':
+            if move == 'menu':
+                print("返回主菜单...")
+                break
+            elif move == 'resign':
                 print(f"{self.current_player}认输！游戏结束。")
                 break
             elif move == 'restart':
@@ -20,35 +23,41 @@ class Gomoku(Game):
             elif move == 'save':
                 save_game(self.board, self.current_player, "gomoku")
                 continue
+            elif move == 'hide':
+                self.show_prompt = False  # 隐藏提示
+                continue
+            elif move == 'show':
+                self.show_prompt = True  # 显示提示
+                continue
+            elif move == 'undo':
+                self.undo_move()  # 调用父类的悔棋方法
+                self.display_board()
+                continue
 
             try:
                 x, y = map(int, move.split())
                 if self.is_valid_move(x, y):
-                    self.save_state()  # 保存当前状态以支持悔棋
+                    self.save_state()
                     self.board[x][y] = 'B' if self.current_player == 'Black' else 'W'
                     self.display_board()
 
-                    # 问是否悔棋
+                    # 在下完棋后询问是否悔棋
                     undo_choice = input(f"是否悔棋？(y/n): ").strip().lower()
                     if undo_choice == 'y':
                         self.undo_move()  # 撤销当前回合
                         continue  # 继续当前玩家下棋
 
-                    # 检查胜利
                     if self.check_winner(x, y):
                         print(f"{self.current_player} 获胜！")
                         break
-                    # 检查棋盘是否满
                     if self.check_draw():
                         print("棋盘已满，平局！")
                         break
-
-                    # 切换玩家回合
                     self.switch_player()
                 else:
                     print("无效的落子，请重新输入。")
             except ValueError:
-                print("输入格式错误，请输入两个数字 (行 列)。")
+                print("输入格式错误，请输入指令或两个数字 (行 列)。")
 
     def is_valid_move(self, x, y):
         return 0 <= x < self.board_size and 0 <= y < self.board_size and self.board[x][y] == '.'

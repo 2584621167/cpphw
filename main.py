@@ -2,7 +2,6 @@ from gomoku import Gomoku
 from go import Go
 from utils import load_game
 
-
 def main():
     print("欢迎来到围棋与五子棋平台")
     while True:
@@ -36,7 +35,6 @@ def main():
                 else:
                     print("存档的游戏类型无效。")
                     continue
-
                 game.board = board
                 game.current_player = player
                 game.start_game()
@@ -45,7 +43,6 @@ def main():
             break
         else:
             print("输入无效，请重新选择。")
-
 
 if __name__ == "__main__":
     main()
